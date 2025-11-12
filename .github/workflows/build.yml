@@ -1,7 +1,8 @@
-name: Build executables
+name: Build and Release
 on:
   push:
-    branches: [ main ]
+    tags:
+      - 'v*'
 jobs:
   build:
     runs-on: ${{ matrix.os }}
@@ -27,3 +28,7 @@ jobs:
         with:
           name: executable-${{ matrix.os }}
           path: dist/
+      - name: Upload to Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: dist/*
