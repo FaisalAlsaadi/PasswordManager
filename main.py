@@ -79,7 +79,6 @@ try:
 
     if not login_window.login_successful:
         print("Login cancelled or failed")
-        exit()
 
     # Apply the actual theme from the decrypted profile BEFORE creating widgets
     try:
@@ -101,7 +100,6 @@ try:
 except Exception as e:
     print(f"Initialization error: {e}")
     traceback.print_exc()
-    exit()
 
 
 def write_file(pass_list):
