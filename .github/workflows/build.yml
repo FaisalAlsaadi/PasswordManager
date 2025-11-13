@@ -57,12 +57,7 @@ jobs:
       - name: Build Linux executable
         run: |
           pyinstaller --onefile \
-            --hidden-import=tkinter \
-            --hidden-import=_tkinter \
-            --collect-all ttkbootstrap \
-            --collect-binaries tcl \
-            --collect-binaries tk \
-            --copy-metadata ttkbootstrap \
+            --additional-hooks-dir=. \
             --name PasswordManager-Linux main.py
       
       - name: Make executable
