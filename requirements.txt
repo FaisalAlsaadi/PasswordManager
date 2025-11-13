@@ -1,5 +1,9 @@
-ttkbootstrap
+ttkbootstrap==1.10.1
 cryptography
+requests
+beautifulsoup4
+pycryptodome
+pyinstallercryptography
 requests
 beautifulsoup4
 pycryptodome
