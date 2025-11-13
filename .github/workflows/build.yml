@@ -27,7 +27,11 @@ jobs:
       
       - name: Build Windows executable
         run: |
-          pyinstaller --onefile --windowed --name PasswordManager-Windows main.py
+          pyinstaller main.spec -- --name PasswordManager-Windows
+      
+      - name: Rename executable
+        run: |
+          move dist\PasswordManager.exe dist\PasswordManager-Windows.exe
       
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v4
@@ -48,7 +52,7 @@ jobs:
       - name: Install system dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y python3-tk
+          sudo apt-get install -y python3-tk python3-dev
       
       - name: Install dependencies
         run: |
@@ -58,10 +62,12 @@ jobs:
       
       - name: Build Linux executable
         run: |
-          pyinstaller --onefile --name PasswordManager-Linux main.py
+          pyinstaller main.spec
       
-      - name: Make executable
-        run: chmod +x dist/PasswordManager-Linux
+      - name: Rename and make executable
+        run: |
+          mv dist/PasswordManager dist/PasswordManager-Linux
+          chmod +x dist/PasswordManager-Linux
       
       - name: Upload Linux artifact
         uses: actions/upload-artifact@v4
@@ -87,7 +93,11 @@ jobs:
       
       - name: Build macOS executable
         run: |
-          pyinstaller --onefile --windowed --name PasswordManager-macOS main.py
+          pyinstaller main.spec
+      
+      - name: Rename executable
+        run: |
+          mv dist/PasswordManager dist/PasswordManager-macOS
       
       - name: Upload macOS artifact
         uses: actions/upload-artifact@v4
@@ -112,21 +122,37 @@ jobs:
             artifacts/linux-build/PasswordManager-Linux
             artifacts/macos-build/PasswordManager-macOS
           body: |
-            ## Installation Instructions
+            ## Password Manager Release
             
-            ### Windows
-            Download `PasswordManager-Windows.exe` and run it directly.
+            ### Installation Instructions
             
-            ### Linux
+            #### Windows
+            1. Download `PasswordManager-Windows.exe`
+            2. Double-click to run (Windows may show a SmartScreen warning - click "More info" then "Run anyway")
+            
+            #### Linux
             1. Download `PasswordManager-Linux`
-            2. Make it executable: `chmod +x PasswordManager-Linux`
-            3. Run: `./PasswordManager-Linux`
+            2. Open terminal in download folder
+            3. Make executable: `chmod +x PasswordManager-Linux`
+            4. Run: `./PasswordManager-Linux`
             
-            **Note**: You need a graphical environment (X11/Wayland) to run this application.
+            **Requirements**: 
+            - Graphical desktop environment (X11/Wayland)
+            - Python 3.11+ (if running from source)
             
-            ### macOS
-            Download `PasswordManager-macOS` and run it.
+            #### macOS
+            1. Download `PasswordManager-macOS`
+            2. Open terminal in download folder
+            3. Make executable: `chmod +x PasswordManager-macOS`
+            4. Run: `./PasswordManager-macOS`
             
-            ## Requirements
-            - This is a GUI application and requires a graphical desktop environment
-            - Cannot be run via SSH without X11 forwarding or in headless environments
+            ### Notes
+            - This is a GUI application requiring a display
+            - First run may take a few seconds to initialize
+            - Your encrypted profile data is stored locally
+            
+            ### Running from Source (Alternative)
+            ```bash
+            pip install -r requirements.txt
+            python main.py
+            ```
