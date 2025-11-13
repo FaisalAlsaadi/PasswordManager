@@ -1,3 +1,22 @@
+def patch_ttkbootstrap_msgcat():
+    try:
+        import ttkbootstrap.localization.msgs as msgs
+        _original = msgs.initialize_localities
+        def safe_init():
+            try:
+                _original()
+            except:
+                pass
+        msgs.initialize_localities = safe_init
+    except:
+        pass
+
+patch_ttkbootstrap_msgcat()
+
+import json
+import random
+import os
+
 import json
 import random
 import os
