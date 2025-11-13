@@ -1,31 +1,132 @@
 name: Build and Release
+
 on:
   push:
     tags:
       - 'v*'
+
 permissions:
   contents: write
+
 jobs:
-  build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest]
+  build-windows:
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
+      
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+      
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install pyinstaller
           pip install -r requirements.txt
-      - name: Build executable
+      
+      - name: Build Windows executable
         run: |
-          pyinstaller --onefile main.py
-      - name: Upload to Release
+          pyinstaller --onefile --windowed --name PasswordManager-Windows main.py
+      
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-build
+          path: dist/PasswordManager-Windows.exe
+
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3-tk
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyinstaller
+          pip install -r requirements.txt
+      
+      - name: Build Linux executable
+        run: |
+          pyinstaller --onefile --name PasswordManager-Linux main.py
+      
+      - name: Make executable
+        run: chmod +x dist/PasswordManager-Linux
+      
+      - name: Upload Linux artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-build
+          path: dist/PasswordManager-Linux
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyinstaller
+          pip install -r requirements.txt
+      
+      - name: Build macOS executable
+        run: |
+          pyinstaller --onefile --windowed --name PasswordManager-macOS main.py
+      
+      - name: Upload macOS artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-build
+          path: dist/PasswordManager-macOS
+
+  release:
+    needs: [build-windows, build-linux, build-macos]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+      
+      - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          files: dist/*
+          files: |
+            artifacts/windows-build/PasswordManager-Windows.exe
+            artifacts/linux-build/PasswordManager-Linux
+            artifacts/macos-build/PasswordManager-macOS
+          body: |
+            ## Installation Instructions
+            
+            ### Windows
+            Download `PasswordManager-Windows.exe` and run it directly.
+            
+            ### Linux
+            1. Download `PasswordManager-Linux`
+            2. Make it executable: `chmod +x PasswordManager-Linux`
+            3. Run: `./PasswordManager-Linux`
+            
+            **Note**: You need a graphical environment (X11/Wayland) to run this application.
+            
+            ### macOS
+            Download `PasswordManager-macOS` and run it.
+            
+            ## Requirements
+            - This is a GUI application and requires a graphical desktop environment
+            - Cannot be run via SSH without X11 forwarding or in headless environments
