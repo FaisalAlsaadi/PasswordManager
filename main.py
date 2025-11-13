@@ -231,7 +231,7 @@ def ADD_BUTTON(mode="", index_of_item=0, website="", email="", password=""):
     else:
         top.title("Add a new password")
 
-    top.config(padx=50)
+    top.config(padx=50, pady=20)
     website_name_label = tkinter.Label(top, text="Website Name")
     website_name_label.grid(padx=(0, 20), column=0, row=1)
     website_name_entry = tkinter.Entry(top)
