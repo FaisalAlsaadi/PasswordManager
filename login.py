@@ -89,7 +89,7 @@ class LoginPage:
         self.window.withdraw()
         new_user_window = ttks.Toplevel(self.window)
         new_user_window.title("Create A New Profile")
-        new_user_window.geometry("300x220")
+        new_user_window.geometry("300x270")
         new_user_window_frame = tk.Frame(new_user_window)
         new_user_window_frame.grid(row=0, column=0, pady=20, padx=70)
 
