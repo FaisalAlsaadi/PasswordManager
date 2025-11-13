@@ -216,7 +216,7 @@ def ADD_BUTTON(mode="", index_of_item=0, website="", email="", password=""):
             return False
 
     top = Toplevel()
-    top.geometry("350x170")
+    top.geometry("350x220")
     top.resizable(width=False, height=False)
 
     if mode == "Edit":
