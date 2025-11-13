@@ -35,7 +35,7 @@ jobs:
           path: dist/PasswordManager-Windows.exe
 
   build-linux:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       
