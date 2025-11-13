@@ -9,6 +9,6 @@ for all user emails/passwords to check if they are in any breaches
 
 Sleek interface — various theme options are included
 
-Password strength indicator
+Password strength indicator including common password detection
 
 Local profile storage
