@@ -57,7 +57,7 @@ jobs:
       - name: Build Linux executable
         run: |
           pyinstaller --onefile \
-            --additional-hooks-dir=. \
+            --runtime-hook=rthook_ttkbootstrap.py \
             --name PasswordManager-Linux main.py
       
       - name: Make executable
