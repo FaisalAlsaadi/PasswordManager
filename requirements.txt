@@ -4,8 +4,3 @@ requests
 beautifulsoup4
 pycryptodome
 pyinstaller
-cryptography
-requests
-beautifulsoup4
-pycryptodome
-pyinstaller
